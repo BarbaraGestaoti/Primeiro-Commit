@@ -1,0 +1,72 @@
+-- =========================================================
+-- PROJETO BANVIC - ETAPA 02: DIAGNÓSTICO DE DATA QUALITY
+-- Autor: Barbara Sales Brasil
+-- Objetivo: Validação de valores nulos em colunas críticas
+-- =========================================================
+
+-- 1. Verificação da Tabela: agencias
+SELECT * FROM agencias a
+WHERE a.cod_agencia IS NULL 
+   OR a.nome IS NULL 
+   OR a.cidade IS NULL;
+
+-- 2. Verificação da Tabela: clientes
+SELECT * FROM clientes c 
+WHERE c.cod_cliente IS NULL
+   OR c.primeiro_nome IS NULL
+   OR c.ultimo_nome IS NULL
+   OR c.email IS NULL
+   OR c.tipo_cliente IS NULL
+   OR c.data_inclusao IS NULL
+   OR c.cpfcnpj IS NULL
+   OR c.endereco IS NULL
+   OR c.cep IS NULL;
+
+-- 3. Verificação da Tabela: colaborador_agencia
+SELECT * FROM colaborador_agencia ca
+WHERE ca.cod_colaborador IS NULL
+   OR ca.cod_agencia IS NULL;
+
+-- 4. Verificação da Tabela: propostas_credito
+SELECT * FROM propostas_credito pc
+WHERE pc.cod_proposta IS NULL
+   OR pc.cod_cliente IS NULL
+   OR pc.cod_colaborador IS NULL
+   OR pc.data_entrada_proposta IS NULL
+   OR pc.taxa_juros_mensal IS NULL
+   OR pc.valor_proposta IS NULL
+   OR pc.valor_financiamento IS NULL
+   OR pc.valor_entrada IS NULL
+   OR pc.valor_prestacao IS NULL
+   OR pc.quantidade_parcelas IS NULL
+   OR pc.carencia IS NULL
+   OR pc.status_proposta IS NULL;
+
+-- 5. Verificação da Tabela: colaboradores
+SELECT * FROM colaboradores c
+WHERE c.cod_colaborador IS NULL
+   OR c.primeiro_nome IS NULL
+   OR c.ultimo_nome IS NULL
+   OR c.cpf IS NULL
+   OR c.data_nascimento IS NULL
+   OR c.endereco IS NULL
+   OR c.cep IS NULL;
+
+-- 6. Verificação da Tabela: contas
+SELECT * FROM contas co
+WHERE co.num_conta IS NULL
+   OR co.cod_cliente IS NULL
+   OR co.cod_agencia IS NULL
+   OR co.tipo_conta IS NULL
+   OR co.saldo_total IS NULL
+   OR co.data_abertura IS NULL;
+
+-- 7. Verificação da Tabela: transacoes
+SELECT * FROM transacoes t
+WHERE t.cod_transacao IS NULL
+   OR t.num_conta IS NULL
+   OR t.data_transacao IS NULL
+   OR t.valor_transacao IS NULL;
+
+
+
