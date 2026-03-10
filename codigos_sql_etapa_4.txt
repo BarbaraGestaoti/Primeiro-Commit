@@ -1,0 +1,32 @@
+SQL
+/************************************************************
+ * PROJETO: BANVIC - Analytics Engineering
+ * DATA: Março/2026
+ * AUTORA: Barbara Sales Brasil
+ * DESCRIÇÃO: Script de limpeza e transformação (Saneamento)
+ * da tabela de Colaboradores.
+ ************************************************************/
+
+-- 1. Criação e Preenchimento do Nome Completo
+ALTER TABLE colaboradores ADD COLUMN nome_completo VARCHAR(255);
+UPDATE colaboradores SET nome_completo = CONCAT_WS(' ', primeiro_nome, ultimo_nome);
+
+-- 2. Extração da UF a partir do endereço
+ALTER TABLE colaboradores ADD COLUMN uf VARCHAR(2);
+UPDATE colaboradores SET uf = RIGHT(TRIM(endereco), 2);
+
+-- 3. Cálculo de Idade (Tratando o tipo de dado para DATE)
+ALTER TABLE colaboradores ADD COLUMN idade INTEGER;
+UPDATE colaboradores SET idade = EXTRACT(YEAR FROM AGE(CURRENT_DATE, data_nascimento::DATE));
+
+-- 4. Classificação Etária (Lógica de Negócio)
+ALTER TABLE colaboradores ADD COLUMN classificacao_etaria VARCHAR(50);
+UPDATE colaboradores SET classificacao_etaria = CASE 
+    WHEN idade <= 25 THEN 'Jovem'
+    WHEN idade BETWEEN 26 AND 45 THEN 'Adulto'
+    WHEN idade > 45 THEN 'Sênior'
+    ELSE 'Não Informado'
+END;
+
+-- 5. Padronização de CEP 
+UPDATE colaboradores SET cep = REPLACE(REPLACE(cep, '.', ''), '-', '');
