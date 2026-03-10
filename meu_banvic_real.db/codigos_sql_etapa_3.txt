@@ -1,0 +1,41 @@
+-- =============================================================================
+-- PROJETO: Lighthouse - Banco Banvic
+-- ANALISTA: Barbara Sales Brasil
+-- DESCRIÇÃO: Limpeza, padronização e fatiamento da tabela 'agencias'
+-- =============================================================================
+
+-- 1. LIMPEZA DE TEXTO (NOME DA AGÊNCIA)
+-- Remove o termo redundante "Agência " para padronizar e economizar espaço[cite: 100, 106, 125].
+UPDATE agencias 
+SET nome = REPLACE(nome, 'Agência ', '');
+
+-- 2. PADRONIZAÇÃO DE DATA
+-- Substitui '/' por '-' para preparar o campo para o formato DATE do banco[cite: 109, 125].
+UPDATE agencias 
+SET data_abertura = REPLACE(data_abertura, '/', '-');
+
+-- 3. REESTRUTURAÇÃO DO ENDEREÇO (DDL)
+-- Criação de novas colunas para organizar o endereço fatiado[cite: 118, 120, 125].
+ALTER TABLE agencias 
+ADD COLUMN logradouro TEXT, 
+ADD COLUMN numero TEXT, 
+ADD COLUMN bairro TEXT;
+
+-- 4. FATIAMENTO DOS DADOS (DML)
+-- Distribui as informações do campo 'endereco' original para as novas colunas[cite: 122, 123, 124, 125].
+UPDATE agencias SET logradouro = SPLIT_PART(endereco, ',', 1);
+UPDATE agencias SET numero = SPLIT_PART(endereco, ',', 2);
+UPDATE agencias SET bairro = SPLIT_PART(endereco, ',', 3);
+
+-- 5. VALIDAÇÃO FINAL
+-- Consulta para conferir o resultado das transformações[cite: 113, 125].
+SELECT 
+    nome AS nome_limpo,
+    TO_CHAR(data_abertura::DATE, 'DD/MM/YYYY') AS data_abertura_ptbr,
+    logradouro,
+    numero,
+    bairro,
+    cidade,
+    tipo_agencia
+FROM agencias 
+LIMIT 10;
