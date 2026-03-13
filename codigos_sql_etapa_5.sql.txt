@@ -1,0 +1,23 @@
+SELECT * -- identificação de colunas existentes, verificacao se esta conforme
+FROM agencias a 
+LIMIT 5
+
+ALTER TABLE agencias -- tive a ideia de incluir a contagem de colaboradores para ter uma ideia do tamanho da agencia, depois quero contar os clientes e porte das movimentacoes
+ADD COLUMN qtt_colaboradores int;
+
+ALTER TABLE agencias -- pedi avaliacao da IA, ela me sugeriu uma forma melhor de fazer, depois da orientacao e compreensao, fiz sozinha a exclusao, pois ja havia feito
+DROP COLUMN qtt_colaboradores;
+
+SELECT * -- verifiquei se deu certo
+FROM colaborador_agencia ca 
+LIMIT 5
+
+ALTER TABLE agencias -- segui a orientacao e explicacao da IA, rodei novamente o select + from e constatei que realmente ficou melhor.
+ADD COLUMN qtde_colaboradores int DEFAULT 0;
+
+UPDATE agencias a -- contagem incluída com sucesso. Utilizarei a logica deste codigo para inserir a contagem de clientes e algum calculo que correlacione qtt_colaborador/qtt_clientes, observei nas avaliacoes preliminares que pode haver agencias com poucos clientes registrados
+SET qtde_colaboradores = (
+    SELECT COUNT(*)
+    FROM colaborador_agencia c
+    WHERE c.cod_agencia = a.cod_agencia
+);
